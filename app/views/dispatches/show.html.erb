@@ -1,0 +1,27 @@
+<h1>
+  <%= (params[:delivery_day]).to_date.mon %>月
+  <%= (params[:delivery_day]).to_date.day %>日の配信一覧
+</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>配送時間</th>
+      <th>配送配送先</th>
+      <th>トラックNO.</th>
+      <th>担当者</th>
+      <th>備考</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @detail_dispatches.each do | dispatch | %>
+        <tr>
+          <td><%= dispatch.delivery_time %></td>
+          <td><%= dispatch.delivery_target %></td>
+          <td><%= dispatch.truck_num %></td>
+          <td><%= dispatch.worker.name %></td>
+          <td><%= dispatch.remarks %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

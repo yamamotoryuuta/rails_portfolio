@@ -1,0 +1,15 @@
+<h1><%= @worker_dispatch.worker.name %>さんのマイページ</h1>
+<h2>
+  <%= @worker_dispatch.delivery_day.mon %>月
+  <%= @worker_dispatch.delivery_day.day %>日の配車は
+</h2>
+
+<p>配送時間：<%= @worker_dispatch.delivery_time %></p>
+<p>配送先：<%= @worker_dispatch.delivery_target %></p>
+<p>トラックNO.：<%= @worker_dispatch.truck_num %></p>
+<p>備考：<%= @worker_dispatch.remarks %></p>
+
+<%= link_to "配車一覧へ", dispatch_path(delivery_day: @worker_dispatch.delivery_day) %>
+
+
+

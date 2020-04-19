@@ -1,0 +1,5 @@
+<h1>配信日一覧</h1>
+
+<% @dispatch_days.each do |day| %>
+<p><%= link_to "#{day.delivery_day.mon}月#{day.delivery_day.day}日", dispatch_path(delivery_day: day.delivery_day) %></p>
+<% end %>

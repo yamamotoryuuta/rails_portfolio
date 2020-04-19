@@ -10,6 +10,17 @@
   </head>
 
   <body>
+
+    <% if worker_signed_in? %>
+      <%= link_to "ログアウト", destroy_worker_session_path, method: :delete %>
+      <%= link_to "ドライバー一覧へ", workers_path %>
+      <%= link_to "配信日一覧へ", dispatches_path %>
+      <%= link_to "マイページへ", worker_path(current_worker.id) %>
+    <% else %>
+      <%= link_to "ログイン", new_worker_session_path, class: 'post' %>
+    <% end %>
+
     <%= yield %>
+    
   </body>
 </html>
