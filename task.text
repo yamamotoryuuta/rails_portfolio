@@ -37,23 +37,7 @@ gem-install
       import 'bootstrap'
       import '../src/application.scss'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-to:
-
+git commit -m "first_commit,gem_setting"
 
 model-create
   model-create
@@ -80,7 +64,9 @@ model-create
 
       association:
         has_many :dispatches
-      
+
+  bundle exec rake db:migrate
+
   admin-setting
     admin-add_resource:
       rails g active_admin:resource worker
@@ -88,20 +74,18 @@ model-create
 
     worker_create_view-setting:
       app/admin/worker.rb
-        permit_params:
-          permit_params :name, :tel, :email, :password, :remember_created_at
-      
-        form:
-          form do |f|
-            f.inputs do
-              f.input :name
-              f.input :tel
-              f.input :email
-              f.input :password
-              f.input :remember_created_at
-            end
-            f.actions
+        permit_params :name, :tel, :email, :password, :remember_created_at
+    
+        form do |f|
+          f.inputs do
+            f.input :name
+            f.input :tel
+            f.input :email
+            f.input :password
+            f.input :remember_created_at
           end
+          f.actions
+        end
 
     gem 'active_admin_importable'
         setting
@@ -109,7 +93,7 @@ model-create
           active_admin_importable do |model, hash|
           model.create(kye: hash[:value])
           end
-      
+
     gem 'i18n'
       setting
         config/application.rb
@@ -120,8 +104,12 @@ model-create
           devise.ja.yml
           active_admin.ja.yml
           model.ja.yml
-      
 
+git commit -m "model_create,admin_setting"
+
+
+
+to:
 
 views,controller,routes-create
   controller-create

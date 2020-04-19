@@ -1,0 +1,22 @@
+ja:
+  activerecord:
+    models:
+      admin_user: 管理者
+      comment: コメント
+      dispatch: 配車表
+      worker: 作業員
+    attributes:
+      admin_user:
+        email: メールアドレス
+        current_sign_in_at: 最新ログイン日時
+        sign_in_count: ログイン回数
+        created_at: 作成日時
+      dispatch:
+        delivery_day: 配送日時
+        delivery_target: 配送現場
+        delivery_time: 配送日時
+        truck_num: トラックナンバー
+        remarks: 備考
+        create_day: 配信日時
+        update_day: 変更日時
+        worker_id: 作業員No.
