@@ -1,0 +1,217 @@
+do:
+
+gem-install
+  gem 'devise'
+    setting
+      rails g devise:install
+
+  gem 'active_admin'
+    setting
+      rails g active_admin:install
+      bundle exec rake db:create
+      bundle exec rake db:migrate
+      bundle exec rake db:seed
+
+  gem 'bootstrap'
+  gem 'jquery-rails'
+    setting
+      yarn add bootstrap jquery popper.js
+      (コマンド)
+
+    app/javascript/packs/application.js
+      require("jquery")
+
+    config/webpack/environment.js
+      const webpack = require('webpack')
+      environment.plugins.prepend('Provide',
+        new webpack.ProvidePlugin({
+          $: 'jquery/src/jquery',
+          jQuery: 'jquery/src/jquery'
+        })
+      )
+    
+    app/javascript/src/application.scss
+      @import '~bootstrap/scss/bootstrap';
+
+    app/javascript/packs/application.js
+      import 'bootstrap'
+      import '../src/application.scss'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+to:
+
+
+model-create
+  model-create
+    rails g model Dispatch
+    rails g devise Worker
+    
+  migrate,association-setting
+    dispatch:
+      migrate:
+        t.date    :delivery_day,       null: false
+        t.string  :delivery_time,      null: false
+        t.string  :delivery_target,    null: false
+        t.string  :truck_num,          null: false
+        t.text    :remarks
+        t.integer :worker_id,          null: false
+
+      association:
+        belongs_to :worker
+
+    worker:
+      migrate:  (add-devise)
+        t.string :name,        null: false
+        t.string :tel,         null: false
+
+      association:
+        has_many :dispatches
+      
+  admin-setting
+    admin-add_resource:
+      rails g active_admin:resource worker
+      rails g active_admin:resource dispatch
+
+    worker_create_view-setting:
+      app/admin/worker.rb
+        permit_params:
+          permit_params :name, :tel, :email, :password, :remember_created_at
+      
+        form:
+          form do |f|
+            f.inputs do
+              f.input :name
+              f.input :tel
+              f.input :email
+              f.input :password
+              f.input :remember_created_at
+            end
+            f.actions
+          end
+
+    gem 'active_admin_importable'
+        setting
+        app/admin/dispatches.rb
+          active_admin_importable do |model, hash|
+          model.create(kye: hash[:value])
+          end
+      
+    gem 'i18n'
+      setting
+        config/application.rb
+          config.i18n.default_locale = :ja
+
+        config/locales
+          ja.yml create
+          devise.ja.yml
+          active_admin.ja.yml
+          model.ja.yml
+      
+
+
+views,controller,routes-create
+  controller-create
+    workers
+      def index
+        @workers = Worker.all
+      end
+
+      def show
+        @worker_dispatch = worker.dispatches.find_by(create_at: Date.today,worker_id: params[:id])
+      end
+
+    dispatches
+      def index
+        @dispatch_days = Dispatch.select(:delivery_day).group(:delivery_day).order(delivery_day: :desc)
+      end
+
+      def show
+        @detail_dispatches = Dispatch.where(delivery_day: params[:delivery_day])
+      end
+
+  views-create
+    workers
+      index.html.erb
+        h1 ドライバー一覧   
+          
+          - @workers.each do | worker |
+          
+          p 名前：　= worker.name  電話番号：　= worker.tel
+
+
+      show.html.erb
+        h1  = "#{@worker_dispatch.name}さんのマイページ"
+        h2  = "#{@worker_dispatch.delivery_day.mon}"月 ="#{@worker_dispatch.delivery_day.day}"日の配送先は
+
+        p  配送先： = "#{@worker_dispatch.delivery_target}"
+        p  配送時間： = "#{@worker_dispatch.delivery_time}"
+        p  備考： = "#{@worker_dispatch.remarks}"
+
+        link_to '配車一覧へ' dispatch_path(delivery_day: params[:delivery_day])
+
+    dispatches
+      index.html.erb
+        h1 配信日一覧
+
+        - @dispatch_days.each do | day |
+        - text = "#{day.delivery_day.man}"月"#{day.delivery_day.day}"日
+         
+         link_to "#{text}", dispatch_path(delivery_day: day.delivery_day)
+
+      show.html.erb
+        h1 = "#{@detail_dispatches.delivery_day.mon}"月"#{@detail_dispatches.delivery_day.day}"日の配車一覧
+
+        table
+          thead
+            tr
+              th = 配送時間
+              th = 配送先
+              th = 名前
+              th = トラックNO.
+              th = 備考
+          tbody
+            - @detail_dispatches.each do | dispatch |
+              - dispatch.worker.each do | worker |
+              tr
+                td = dispatch.delivery_time
+                td = dispatch.delivery_target
+                td = worker.name
+                td = dispatch.truck_num
+                td = dispatch.remarks
+              tr
+
+  routes
+    routes.rb
+      root to: "workers#show"
+
+      resources :workers     only: :index :show
+      resources :dispatches  only: :index :show
+
+
+ログインしていなければログインしてください。
+
+
+            
+
+
+      
+
+        
+
+
+
+
